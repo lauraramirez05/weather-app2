@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles/styles.css';
+import Navbar from './components/Navbar';
+import Location from './components/Location';
+// import TimeChooser from "./components/TimeChooser";
+import TimePicker from './components/TimePicker';
+import Weather from './components/Weather';
+import { WeatherProvider } from './utils/WeatherContext';
 
-function App() {
+const App = () => {
+  console.log('KEY', process.env.REACT_APP_WEATHER_API_KEY);
+  console.log('KEYW', process.env.REACT_APP_KEY);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <WeatherProvider>
+      <div className='App'>
+        <Navbar />
+        <Location />
+        <TimePicker />
+        {/* <TimeChooser /> */}
+        <Weather />
+      </div>
+    </WeatherProvider>
   );
-}
+};
 
 export default App;
