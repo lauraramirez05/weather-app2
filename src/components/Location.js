@@ -17,8 +17,8 @@ const Location = () => {
     <div className='location-container'>
       <FontAwesomeIcon icon={faLocationDot} />
       <h2 onClick={handleClick}>{place}</h2>
-      <LocationModal2 />
-      {locationModal && <LocationModal2 />}
+      {/* <LocationModal2 /> */}
+      {locationModal && <LocationModal />}
     </div>
   );
 };
