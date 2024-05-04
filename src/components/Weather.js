@@ -1,9 +1,10 @@
 import { useWeatherContext } from '../utils/WeatherContext';
 import { useState, useEffect } from 'react';
 import LineChart from './LineChart';
+import imageLoader from './imageLoader';
 
 const Weather = () => {
-  const { dayOfWeek, place, time, filteredDays, setFilteredDays } =
+  const { dayOfWeek, setPlace, place, time, filteredDays, setFilteredDays } =
     useWeatherContext();
   const [data, setData] = useState(null);
   console.log(place);
@@ -15,10 +16,13 @@ const Weather = () => {
           `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${place}/next10days?key=HC5DWBUHKBB7LJEBFWJQ4KKQJ`
         );
         if (!response.ok) {
+          alert("The city you are looking for doesn't exist. Check spelling");
+          setPlace('New York City, US');
           throw new Error(`Network response was not ok ${response.status}`);
         }
         const jsonData = await response.json();
-        const { days } = jsonData;
+        console.log('jsonData', jsonData);
+        const { days, resolvedAddress } = jsonData;
         setData({ days });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -26,7 +30,7 @@ const Weather = () => {
     };
 
     fetchData();
-  }, [dayOfWeek, place]);
+  }, [place, dayOfWeek]);
 
   //Format date
   const formatDate = (dateString) => {
@@ -87,7 +91,10 @@ const Weather = () => {
         <div className='weather-container'>
           <h1>{day.datetime.slice(0, -4)}</h1>
           <div className='weather-info-container'>
-            <div className='weather-icon'>{day.icon}</div>
+            <div className='weather-icon'>
+              {day.icon}
+              <imageLoader imageName={`${day.icon}.png`} />
+            </div>
             <div className='weather-info'>
               <span className='temperature'>{Math.round(day.temp)}°</span>
               <span>{day.conditions}</span>
