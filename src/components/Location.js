@@ -2,34 +2,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { useWeatherContext } from '../utils/WeatherContext';
 import { useState } from 'react';
+import LocationModal from './LocationModal';
 
 const Location = () => {
-  const { place, setPlace } = useWeatherContext();
-  const [inputValue, setInputValue] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const { place, setPlace, locationModal, setLocationModal } =
+    useWeatherContext();
 
-  const submitInput = (e) => {
-    console.log('before', place);
-    if (e.keyCode === 13) {
-      setPlace(inputValue);
-    }
-    console.log(place);
-  };
-
-  const handleInputChange = (e) => {
-    console.log(e.target.value);
-    setInputValue(e.target.value);
+  const handleClick = () => {
+    setLocationModal(true);
   };
 
   return (
     <div className='location-container'>
-      <input
-        type='text'
-        placeholder='New York City, NY, United States'
-        className='location'
-        onChange={handleInputChange}
-        onKeyDown={submitInput}
-      />
+      <FontAwesomeIcon icon={faLocationDot} />
+      <h2 onClick={handleClick}>{place}</h2>
+      {locationModal && <LocationModal />}
     </div>
   );
 };

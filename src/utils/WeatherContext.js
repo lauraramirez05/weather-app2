@@ -6,12 +6,25 @@ export const WeatherContext = createContext();
 const WeatherProvider = ({ children }) => {
   //define the states provided
   const [dayOfWeek, setDayOfWeek] = useState(0);
-  const [time, setTime] = useState('Morning');
+  const [time, setTime] = useState('morning');
   const [place, setPlace] = useState('New York City, US');
+  const [locationModal, setLocationModal] = useState(false);
+  const [filteredDays, setFilteredDays] = useState([]);
 
   return (
     <WeatherContext.Provider
-      value={{ dayOfWeek, setDayOfWeek, time, setTime, place, setPlace }}
+      value={{
+        dayOfWeek,
+        setDayOfWeek,
+        time,
+        setTime,
+        place,
+        setPlace,
+        locationModal,
+        setLocationModal,
+        filteredDays,
+        setFilteredDays,
+      }}
     >
       {children}
     </WeatherContext.Provider>

@@ -1,11 +1,12 @@
 import { useWeatherContext } from '../utils/WeatherContext';
 import { useState, useEffect } from 'react';
+import LineChart from './LineChart';
 
 const Weather = () => {
-  const { dayOfWeek, place } = useWeatherContext();
+  const { dayOfWeek, place, time, filteredDays, setFilteredDays } =
+    useWeatherContext();
   const [data, setData] = useState(null);
-  const [filteredDays, setFilteredDays] = useState([]);
-  console.log(dayOfWeek);
+  console.log(time);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,8 +28,6 @@ const Weather = () => {
     fetchData();
   }, [dayOfWeek, place]);
 
-  console.log(data);
-  console.log('DAY OF WEEK', dayOfWeek);
   //Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -42,7 +41,9 @@ const Weather = () => {
     //Get the day of the month
     const dayOfMonth = date.getDate();
 
-    const formattedDate = `${dayOfWeek}, ${month} ${dayOfMonth}`;
+    const year = date.getFullYear();
+
+    const formattedDate = `${dayOfWeek}, ${month} ${dayOfMonth} ${year}`;
 
     return formattedDate;
   };
@@ -57,19 +58,35 @@ const Weather = () => {
         }))
         .filter((day) => {
           const date = new Date(day.datetime);
-          console.log([date.getDay(), dayOfWeek]);
           return date.getDay() === dayOfWeek; // Tuesday has index 2 (0 for Sunday, 1 for Monday, ...)
+        })
+        .map((day) => {
+          const weatherByHour = day.hours;
+          const filteredWeatherByHour = weatherByHour.filter((hour) => {
+            let timeArray = hour.datetime.split(':');
+            if (time === 'morning') {
+              return timeArray[0] >= '07' && timeArray[0] <= '13';
+            } else if (time === 'afternoon') {
+              return timeArray[0] >= '11' && timeArray[0] <= '18';
+            } else if (time === 'evening') {
+              return timeArray[0] >= '16' && timeArray[0] <= '22';
+            }
+          });
+          return {
+            ...day,
+            hours: filteredWeatherByHour,
+          };
         });
       console.log(transformedDays);
       setFilteredDays(transformedDays);
     }
-  }, [data, dayOfWeek]);
+  }, [data, dayOfWeek, time]);
 
   return (
     <>
       {filteredDays.map((day) => (
         <div className='weather-container'>
-          <h1>{day.datetime}</h1>
+          <h1>{day.datetime.slice(0, -4)}</h1>
           <div className='weather-info-container'>
             <div className='weather-icon'>{day.icon}</div>
             <div className='weather-info'>
@@ -79,7 +96,7 @@ const Weather = () => {
               <span>Chance of Rain: </span>
             </div>
           </div>
-          <div className='weather-graph'></div>
+          <LineChart data={day.hours} currentDay={day.datetime} />
         </div>
       ))}
     </>
