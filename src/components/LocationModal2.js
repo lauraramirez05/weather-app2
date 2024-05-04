@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { GEO_API_URL, getApiOptions } from './GeoApi';
 
-const LocationModal = () => {
+const LocationModal2 = () => {
   const { place, setPlace, locationModal, setLocationModal } =
     useWeatherContext();
   const [inputValue, setInputValue] = useState(null);
@@ -13,6 +13,7 @@ const LocationModal = () => {
   const submitInput = (e) => {
     if (e.keyCode === 13) {
       console.log('pressed enter');
+      e.preventDefault(); // Prevent the default form submission
       if (inputValue !== null) {
         setPlace(inputValue);
         setInputValue('');
@@ -21,27 +22,50 @@ const LocationModal = () => {
     }
   };
 
+  // const handleInputChange = (searchData) => {
+  //   setPlace(searchData.value);
+  // };
+
   const handleInputChange = (e) => {
-    console.log('inside handleInputchange');
     console.log(e.target.value);
-    setInputValue(e.target.value);
+  };
+
+  const loadOptions = async (inputValue) => {
+    try {
+      const response = await fetch(
+        `${GEO_API_URL}/cities?namePrefix=${inputValue}`,
+        getApiOptions
+      );
+      const result = await response.json();
+      return {
+        options: result.data.map((city) => {
+          return {
+            value: `${city.name}, ${city.countryCode}`,
+            label: `${city.name}, ${city.countryCode}`,
+          };
+        }),
+      };
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <div className={`location-container modal ${locationModal ? 'open' : ''}`}>
-      <div className='modal-content'>
+    <div className='input2'>
+      <div>
         <FontAwesomeIcon icon={faLocationDot} />
-        <input
-          type='text'
-          placeholder='New York City, US'
+        <AsyncPaginate
+          placeholder='Search for city'
           className='location'
-          value={inputValue}
+          debounceTimeout={600}
+          value={place}
           onChange={handleInputChange}
           onKeyDown={submitInput}
+          loadOptions={loadOptions}
         />
       </div>
     </div>
   );
 };
 
-export default LocationModal;
+export default LocationModal2;

@@ -6,7 +6,7 @@ const Weather = () => {
   const { dayOfWeek, place, time, filteredDays, setFilteredDays } =
     useWeatherContext();
   const [data, setData] = useState(null);
-  console.log(time);
+  console.log(place);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,11 +65,11 @@ const Weather = () => {
           const filteredWeatherByHour = weatherByHour.filter((hour) => {
             let timeArray = hour.datetime.split(':');
             if (time === 'morning') {
-              return timeArray[0] >= '07' && timeArray[0] <= '13';
+              return timeArray[0] >= '08' && timeArray[0] <= '12';
             } else if (time === 'afternoon') {
-              return timeArray[0] >= '11' && timeArray[0] <= '18';
+              return timeArray[0] >= '12' && timeArray[0] <= '17';
             } else if (time === 'evening') {
-              return timeArray[0] >= '16' && timeArray[0] <= '22';
+              return timeArray[0] >= '17' && timeArray[0] <= '21';
             }
           });
           return {
@@ -77,7 +77,6 @@ const Weather = () => {
             hours: filteredWeatherByHour,
           };
         });
-      console.log(transformedDays);
       setFilteredDays(transformedDays);
     }
   }, [data, dayOfWeek, time]);

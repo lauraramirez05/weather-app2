@@ -54,7 +54,7 @@ const LineChart = ({ data, currentDay }) => {
 
     const xScale = d3
       .scaleLinear()
-      .domain([minHour, maxHour])
+      .domain([minHour - 1, maxHour + 1])
       .range([margin.left, innerWidth]); // Width of chart
 
     const xAxis = d3
@@ -99,6 +99,12 @@ const LineChart = ({ data, currentDay }) => {
       .attr('stroke-width', 2)
       .attr('d', tempLine);
 
+    const tooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
+
     svg
       .selectAll('.temp-circle') // Select all circles with class 'temp-circle'
       .data(temperatureData) // Bind data
@@ -107,20 +113,23 @@ const LineChart = ({ data, currentDay }) => {
       .attr('class', 'temp-circle') // Add class for styling
       .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
       .attr('cy', (d) => tempScale(d.temp)) // Set y position based on temperature
-      .attr('r', 4) // Set radius of the circle
-      .attr('fill', 'steelblue'); // Set color of the circle
+      .attr('r', 3) // Set radius of the circle
+      .attr('fill', 'steelblue') // Set color of the circle
+      .on('mouseover', () => {
+        alert('Hi');
+      });
 
-    svg
-      .selectAll('.temp-label') // Select all text elements with class 'temp-label'
-      .data(temperatureData) // Bind data
-      .enter() // Enter selection
-      .append('text') // Append a text element for each data point
-      .attr('class', 'temp-label') // Add class for styling
-      .attr('x', (d) => xScale(d.datetime.getHours())) // Set x position with a small offset
-      .attr('y', (d) => tempScale(d.humidity)) // Set y position with a small offset
-      .text((d) => `(${d.datetime.getHours()}, ${d.temp})`) // Set text content to (hour, temperature)
-      .attr('font-size', '10px') // Set font size
-      .attr('fill', 'steelblue'); // Set color of the text
+    // svg
+    //   .selectAll('.temp-label') // Select all text elements with class 'temp-label'
+    //   .data(temperatureData) // Bind data
+    //   .enter() // Enter selection
+    //   .append('text') // Append a text element for each data point
+    //   .attr('class', 'temp-label') // Add class for styling
+    //   .attr('x', (d) => xScale(d.datetime.getHours())) // Set x position with a small offset
+    //   .attr('y', (d) => tempScale(d.humidity)) // Set y position with a small offset
+    //   .text((d) => `(${d.datetime.getHours()}, ${d.temp})`) // Set text content to (hour, temperature)
+    //   .attr('font-size', '10px') // Set font size
+    //   .attr('fill', 'steelblue'); // Set color of the text
 
     //===== HUMIDITY LINE ======//
     d3.select(svgRef.current)
@@ -139,26 +148,43 @@ const LineChart = ({ data, currentDay }) => {
       .attr('class', 'humidity-circle') // Add class for styling
       .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
       .attr('cy', (d) => humidityScale(d.humidity)) // Set y position based on temperature
-      .attr('r', 4) // Set radius of the circle
+      .attr('r', 3) // Set radius of the circle
       .attr('fill', 'green'); // Set color of the circle
 
-    svg
-      .selectAll('.humidity-label') // Select all text elements with class 'temp-label'
-      .data(humidityData) // Bind data
-      .enter() // Enter selection
-      .append('text') // Append a text element for each data point
-      .attr('class', 'humidity-label') // Add class for styling
-      .attr('x', (d) => xScale(d.datetime.getHours()) + 8) // Set x position with a small offset
-      .attr('y', (d) => humidityScale(d.temp) - 8) // Set y position with a small offset
-      .text((d) => `(${d.datetime.getHours()}, ${d.humidity})`) // Set text content to (hour, temperature)
-      .attr('font-size', '10px') // Set font size
-      .attr('fill', 'green'); // Set color of the text
+    // svg
+    //   .selectAll('.humidity-label') // Select all text elements with class 'temp-label'
+    //   .data(humidityData) // Bind data
+    //   .enter() // Enter selection
+    //   .append('text') // Append a text element for each data point
+    //   .attr('class', 'humidity-label') // Add class for styling
+    //   .attr('x', (d) => xScale(d.datetime.getHours()) + 8) // Set x position with a small offset
+    //   .attr('y', (d) => humidityScale(d.temp) - 8) // Set y position with a small offset
+    //   .text((d) => `(${d.datetime.getHours()}, ${d.humidity})`) // Set text content to (hour, temperature)
+    //   .attr('font-size', '10px') // Set font size
+    //   .attr('fill', 'green'); // Set color of the text
 
     //Move x-axis to bottom
     svg
       .append('g')
       .attr('transform', `translate(0, ${innerHeight})`) // Move the x-axis to the bottom
       .call(xAxis); // Call the axis generator to render the x-axis
+
+    // Create legends
+    svg
+      .append('text')
+      .attr('x', 10)
+      .attr('y', 10)
+      .text('Temperature')
+      .attr('fill', 'steelblue')
+      .attr('font-size', '12px');
+
+    svg
+      .append('text')
+      .attr('x', 10)
+      .attr('y', 25)
+      .text('Humidity')
+      .attr('fill', 'green')
+      .attr('font-size', '12px');
   }, [data, time]);
 
   return (
