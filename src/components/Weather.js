@@ -1,7 +1,7 @@
 import { useWeatherContext } from '../utils/WeatherContext';
 import { useState, useEffect } from 'react';
 import LineChart from './LineChart';
-import imageLoader from './imageLoader';
+
 
 const Weather = () => {
   const { dayOfWeek, setPlace, place, time, filteredDays, setFilteredDays } =
@@ -93,7 +93,7 @@ const Weather = () => {
           <div className='weather-info-container'>
             <div className='weather-icon'>
               {day.icon}
-              <imageLoader imageName={`${day.icon}.png`} />
+              {/* <imageLoader imageName={`${day.icon}.png`} /> */}
             </div>
             <div className='weather-info'>
               <span className='temperature'>{Math.round(day.temp)}°</span>
