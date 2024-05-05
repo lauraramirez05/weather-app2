@@ -19,8 +19,15 @@ const LineChart = ({ data, currentDay }) => {
 
     const humidityData = data.map(({ datetime, humidity }) => ({
       datetime: new Date(`${currentDay} ${datetime}`),
-      humidity,
+      humidity: Math.round(humidity),
     }));
+
+    const windSpeedData = data.map(({ datetime, windspeed }) => ({
+      datetime: new Date(`${currentDay} ${datetime}`),
+      windData: Math.round(windspeed),
+    }));
+
+    console.log('windspeed', windSpeedData);
 
     //Set up svg
     const width = 350;
@@ -41,11 +48,28 @@ const LineChart = ({ data, currentDay }) => {
     const [minHumidity, maxHumidity] = d3.extent(humidityData, (d) =>
       Math.round(d.humidity)
     );
-
     const humidityScale = d3
       .scaleLinear()
       .domain([minHumidity - 1, maxHumidity + 3])
       .range([innerHeight, margin.top]);
+
+    const [minWindSpeed, maxWindSpeed] = d3.extent(windSpeedData, (d) =>
+      Math.round(d.windData)
+    );
+    const windSpeedScale = d3
+      .scaleLinear()
+      .domain([minWindSpeed - 1, maxWindSpeed + 3])
+      .range([innerHeight, margin.top]);
+
+    const yScale = d3
+      .scaleLinear()
+      .domain([
+        Math.min(minTemp, minHumidity, minWindSpeed) - 1,
+        Math.max(maxTemp, maxHumidity, maxWindSpeed) + 3,
+      ])
+      .range([innerHeight, margin.top]);
+
+    const yAxis = d3.axisLeft(yScale);
 
     // Set up the x-axis with dynamic ticks and labels
     const [minHour, maxHour] = d3.extent(temperatureData, (d) =>
@@ -54,7 +78,7 @@ const LineChart = ({ data, currentDay }) => {
 
     const xScale = d3
       .scaleLinear()
-      .domain([minHour - 1, maxHour + 1])
+      .domain([minHour, maxHour])
       .range([margin.left, innerWidth]); // Width of chart
 
     const xAxis = d3
@@ -75,17 +99,86 @@ const LineChart = ({ data, currentDay }) => {
       .attr('height', height)
       .append('g');
 
+    // Append vertical lines for minHour and maxHour
+    svg
+      .append('line')
+      .attr('x1', xScale(minHour + 1))
+      .attr('y1', 0)
+      .attr('x2', xScale(minHour + 1))
+      .attr('y2', innerHeight)
+      .attr('stroke', 'red')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '5,5');
+
+    svg
+      .append('line')
+      .attr('x1', xScale(maxHour - 1))
+      .attr('y1', 0)
+      .attr('x2', xScale(maxHour - 1))
+      .attr('y2', innerHeight)
+      .attr('stroke', 'red')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '5,5');
+
+    //======================EVENT LISTENERS ==================//
+    const handleMouseLeave = () => {
+      // Hide tooltip or clear displayed data
+      tooltip.style('opacity', 0);
+    };
+
+    //Function to handle mouse movement over the listening area
+    const handleMouseMove = (event) => {
+      console.log('heyyyyy');
+      const [xCoord, yCoord] = d3.pointer(event);
+      const hour = Math.round(xScale.invert(xCoord)); // Get the hour corresponding to the mouse position
+      const temperature = temperatureData.find(
+        (d) => d.datetime.getHours() === hour
+      );
+      const humidity = humidityData.find((d) => d.datetime.getHours() === hour);
+
+      // Create or select existing tooltip element
+      let tooltip = d3.select('.tooltip');
+
+      // If tooltip doesn't exist, create it
+      if (tooltip.empty()) {
+        tooltip = d3.select('body').append('div').attr('class', 'tooltip');
+      }
+
+      // Update tooltip content and position
+      tooltip
+        .html(
+          `Hour: ${hour}, Temperature: ${temperature.temp}, Humidity: ${humidity.humidity}`
+        )
+        .style('left', `${xCoord + 10}px`)
+        .style('top', `${yCoord + 10}px`)
+        .style('opacity', 1);
+    };
+
+    const listeningArea = svg
+      .append('rect')
+      .attr('width', innerWidth)
+      .attr('height', innerHeight)
+      .attr('fill', 'transparent')
+      .on('mousemove', handleMouseMove)
+      .on('mouseleave', handleMouseLeave);
+
     //Plot the lines for temp and humidity
     const tempLine = d3
       .line()
       .x((d) => xScale(d.datetime.getHours()))
-      .y((d) => tempScale(d.temp))
+      .y((d) => yScale(d.temp))
       .curve(d3.curveCatmullRom);
 
     const humidityLine = d3
       .line()
       .x((d) => xScale(d.datetime.getHours()))
-      .y((d) => humidityScale(d.humidity))
+      .y((d) => yScale(d.humidity))
+      .curve(d3.curveMonotoneX);
+
+    const windSpeedLine = d3
+      .line()
+      .x((d) => xScale(d.datetime.getHours()))
+      .y((d) => yScale(d.windData))
       .curve(d3.curveMonotoneX);
 
     // Append lines to SVG
@@ -112,12 +205,9 @@ const LineChart = ({ data, currentDay }) => {
       .append('circle') // Append a circle for each data point
       .attr('class', 'temp-circle') // Add class for styling
       .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
-      .attr('cy', (d) => tempScale(d.temp)) // Set y position based on temperature
+      .attr('cy', (d) => yScale(d.temp)) // Set y position based on temperature
       .attr('r', 3) // Set radius of the circle
-      .attr('fill', 'steelblue') // Set color of the circle
-      .on('mouseover', () => {
-        alert('Hi');
-      });
+      .attr('fill', 'steelblue'); // Set color of the circle
 
     // svg
     //   .selectAll('.temp-label') // Select all text elements with class 'temp-label'
@@ -147,10 +237,29 @@ const LineChart = ({ data, currentDay }) => {
       .append('circle') // Append a circle for each data point
       .attr('class', 'humidity-circle') // Add class for styling
       .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
-      .attr('cy', (d) => humidityScale(d.humidity)) // Set y position based on temperature
+      .attr('cy', (d) => yScale(d.humidity)) // Set y position based on temperature
       .attr('r', 3) // Set radius of the circle
       .attr('fill', 'green'); // Set color of the circle
 
+    //===== WINDSPEED LINE ======//
+    d3.select(svgRef.current)
+      .append('path')
+      .datum(windSpeedData)
+      .attr('fill', 'none')
+      .attr('stroke', 'pink')
+      .attr('stroke-width', 2)
+      .attr('d', windSpeedLine);
+
+    svg
+      .selectAll('.windspeed-circle') // Select all circles with class 'temp-circle'
+      .data(windSpeedData) // Bind data
+      .enter() // Enter selection
+      .append('circle') // Append a circle for each data point
+      .attr('class', 'windspeed-circle') // Add class for styling
+      .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
+      .attr('cy', (d) => yScale(d.windData)) // Set y position based on temperature
+      .attr('r', 3) // Set radius of the circle
+      .attr('fill', 'pink'); // Set color of the circle
     // svg
     //   .selectAll('.humidity-label') // Select all text elements with class 'temp-label'
     //   .data(humidityData) // Bind data
@@ -169,22 +278,41 @@ const LineChart = ({ data, currentDay }) => {
       .attr('transform', `translate(0, ${innerHeight})`) // Move the x-axis to the bottom
       .call(xAxis); // Call the axis generator to render the x-axis
 
+    //Append yAxis
+    svg
+      .append('g')
+      .attr('class', 'y-axis')
+      .attr('transform', `translate(${margin.left},0)`)
+      .call(yAxis);
+
     // Create legends
     svg
       .append('text')
-      .attr('x', 10)
+      .attr('x', 265)
       .attr('y', 10)
-      .text('Temperature')
+      .text('Temperature (F)')
       .attr('fill', 'steelblue')
       .attr('font-size', '12px');
 
     svg
       .append('text')
-      .attr('x', 10)
+      .attr('x', 265)
       .attr('y', 25)
-      .text('Humidity')
+      .text('Humidity (%)')
       .attr('fill', 'green')
       .attr('font-size', '12px');
+    svg
+      .append('text')
+      .attr('x', 265)
+      .attr('y', 40)
+      .text('Wind Speed (mph)')
+      .attr('fill', 'pink')
+      .attr('font-size', '12px');
+
+    // Cleanup function to remove event listeners when component unmounts
+    return () => {
+      listeningArea.on('mousemove', null).on('mouseleave', null);
+    };
   }, [data, time]);
 
   return (

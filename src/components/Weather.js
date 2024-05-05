@@ -1,7 +1,7 @@
 import { useWeatherContext } from '../utils/WeatherContext';
 import { useState, useEffect } from 'react';
 import LineChart from './LineChart';
-
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 
 const Weather = () => {
   const { dayOfWeek, setPlace, place, time, filteredDays, setFilteredDays } =
@@ -13,7 +13,7 @@ const Weather = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${place}/next10days?key=HC5DWBUHKBB7LJEBFWJQ4KKQJ`
+          `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${place}/next10days?key=${process.env.REACT_APP_WEATHER_API_KEY}`
         );
         if (!response.ok) {
           alert("The city you are looking for doesn't exist. Check spelling");
@@ -69,11 +69,11 @@ const Weather = () => {
           const filteredWeatherByHour = weatherByHour.filter((hour) => {
             let timeArray = hour.datetime.split(':');
             if (time === 'morning') {
-              return timeArray[0] >= '08' && timeArray[0] <= '12';
+              return timeArray[0] >= '07' && timeArray[0] <= '13';
             } else if (time === 'afternoon') {
-              return timeArray[0] >= '12' && timeArray[0] <= '17';
+              return timeArray[0] >= '11' && timeArray[0] <= '18';
             } else if (time === 'evening') {
-              return timeArray[0] >= '17' && timeArray[0] <= '21';
+              return timeArray[0] >= '14' && timeArray[0] <= '22';
             }
           });
           return {
@@ -87,23 +87,29 @@ const Weather = () => {
 
   return (
     <>
-      {filteredDays.map((day) => (
-        <div className='weather-container'>
-          <h1>{day.datetime.slice(0, -4)}</h1>
-          <div className='weather-info-container'>
-            <div className='weather-icon'>
-              {day.icon}
-              {/* <imageLoader imageName={`${day.icon}.png`} /> */}
+      {filteredDays.map((day, index) => (
+        <Accordion key={index} defaultExpanded={index === 0}>
+          <AccordionSummary key={index}>
+            <h1>{day.datetime.slice(0, -4)}</h1>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className='weather-container'>
+              <div className='weather-info-container'>
+                <div className='weather-icon'>
+                  {/* Display weather icon here */}
+                  <img src={require(`../imgs/${day.icon}.png`)} />
+                </div>
+                <div className='weather-info'>
+                  <span className='temperature'>{Math.round(day.temp)}°</span>
+                  <span>{day.conditions}</span>
+                  <span>Winds: {day.windspeed}mph</span>
+                  <span>Chance of Rain: </span>
+                </div>
+              </div>
+              <LineChart data={day.hours} currentDay={day.datetime} />
             </div>
-            <div className='weather-info'>
-              <span className='temperature'>{Math.round(day.temp)}°</span>
-              <span>{day.conditions}</span>
-              <span>Winds: {day.windspeed}mph</span>
-              <span>Chance of Rain: </span>
-            </div>
-          </div>
-          <LineChart data={day.hours} currentDay={day.datetime} />
-        </div>
+          </AccordionDetails>
+        </Accordion>
       ))}
     </>
   );

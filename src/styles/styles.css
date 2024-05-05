@@ -1,14 +1,25 @@
+* {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
 .App {
   font-family: sans-serif;
   text-align: center;
+  padding: 5px;
+  border-radius: 20px;
+  border: 1px solid black;
+  -webkit-box-shadow: 0px -2px 41px -9px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px -2px 41px -9px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px -2px 41px -9px rgba(0, 0, 0, 0.75);
 }
 
 nav {
+  padding: 10px;
   display: flex;
   justify-content: space-between;
 }
 
 .location-container {
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -28,42 +39,33 @@ nav {
   top: 0;
   left: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   background-color: rgb(0 0 0 / 0.95);
 }
 
 .modal-content {
   font-family: 'IBM Plex Sans', sans-serif;
-  margin: 0 auto;
-  margin-top: 50%;
-  width: 90%;
-  height: 30px;
-  font-weight: 500;
-  text-align: start;
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  overflow: hidden;
-  border-radius: 8px;
+  background-color: rgb(0 0 0 / 0.3);
+  width: 95%;
+  margin: 15px;
+  margin-top: 130px;
   border: 1px solid #dae2ed;
-  color: white;
-  background-color: rgb(0 0 0 / 0.6);
+  color: black;
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  text-align: center;
+  gap: 8px;
+  border-radius: 8px;
 }
 
 .modal svg {
   align-self: center;
   margin-left: 8px;
+  color: white;
 }
 
-.modal input {
-  font-size: 1.5rem;
-}
-
-.modal.open {
-  display: block;
-}
 .location {
   width: 90%;
 }
@@ -74,6 +76,7 @@ nav {
 
 .time-container {
   display: flex;
+  padding: 10px;
   align-self: center;
   justify-content: space-between;
   margin-top: 10px;
@@ -100,6 +103,19 @@ nav {
 
 .temperature {
   font-size: 2rem;
+}
+.weather-graph {
+  position: relative;
+}
+.tooltip {
+  position: absolute;
+  padding: 10px;
+  background-color: steelblue;
+  color: white;
+  border: 1px solid white;
+  border-radius: 10px;
+  opacity: 0;
+  display: none;
 }
 
 @media (max-width: 450px) {

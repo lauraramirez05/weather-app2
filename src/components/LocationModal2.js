@@ -6,12 +6,11 @@ import { AsyncPaginate } from 'react-select-async-paginate';
 import { GEO_API_URL, getApiOptions } from './GeoApi';
 
 const LocationModal2 = () => {
-  const { place, setPlace, locationModal, setLocationModal } =
-    useWeatherContext();
+  const { place, setPlace, setLocationModal } = useWeatherContext();
   const [inputValue, setInputValue] = useState(null);
 
-  const submitInput = (e) => {
-    if (e.keyCode === 13) {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
       console.log('pressed enter');
       e.preventDefault(); // Prevent the default form submission
       if (inputValue !== null) {
@@ -22,12 +21,13 @@ const LocationModal2 = () => {
     }
   };
 
-  // const handleInputChange = (searchData) => {
-  //   setPlace(searchData.value);
-  // };
-
-  const handleInputChange = (e) => {
-    console.log(e.target.value);
+  const handleInputChange = (searchData) => {
+    if (!searchData.value || searchData.value.length > 50) {
+      alert(`City is not valid`);
+    } else {
+      setPlace(searchData.value);
+      setLocationModal(false);
+    }
   };
 
   const loadOptions = async (inputValue) => {
@@ -51,8 +51,8 @@ const LocationModal2 = () => {
   };
 
   return (
-    <div className='input2'>
-      <div>
+    <div className='modal'>
+      <div className='modal-content'>
         <FontAwesomeIcon icon={faLocationDot} />
         <AsyncPaginate
           placeholder='Search for city'
@@ -60,7 +60,7 @@ const LocationModal2 = () => {
           debounceTimeout={600}
           value={place}
           onChange={handleInputChange}
-          onKeyDown={submitInput}
+          onKeyDown={handleKeyDown}
           loadOptions={loadOptions}
         />
       </div>
