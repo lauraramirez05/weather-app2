@@ -11,6 +11,7 @@ const WeatherProvider = ({ children }) => {
   const [locationModal, setLocationModal] = useState(false);
   const [filteredDays, setFilteredDays] = useState([]);
   const [units, setUnits] = useState('F');
+  const [isMobile, setIsMobile] = useState(false);
 
   return (
     <WeatherContext.Provider

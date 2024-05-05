@@ -1,10 +1,14 @@
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useWeatherContext } from '../utils/WeatherContext';
-import Temperature from './Temperature';
+
+//Function to conver farenheit into Celsius
+const convertToCelsius = (farenheit) => {
+  return ((farenheit - 32) * 5) / 9;
+};
 
 const LineChart = ({ data, currentDay }) => {
-  const { time } = useWeatherContext();
+  const { time, units } = useWeatherContext();
   //Gives d3 access to the DOM
   const svgRef = useRef();
 
@@ -15,8 +19,11 @@ const LineChart = ({ data, currentDay }) => {
     //Create set of data for each line
     const temperatureData = data.map(({ datetime, temp }) => ({
       datetime: new Date(`${currentDay} ${datetime}`),
-      temp: Math.round(temp),
+      temp:
+        units === 'F' ? Math.round(temp) : Math.round(convertToCelsius(temp)),
     }));
+
+    console.log(temperatureData);
 
     const humidityData = data.map(({ datetime, humidity }) => ({
       datetime: new Date(`${currentDay} ${datetime}`),
@@ -104,7 +111,7 @@ const LineChart = ({ data, currentDay }) => {
     svg
       .append('line')
       .attr('x1', xScale(minHour + 1))
-      .attr('y1', 0)
+      .attr('y1', 20)
       .attr('x2', xScale(minHour + 1))
       .attr('y2', innerHeight)
       .attr('stroke', '#E0C3FC')
@@ -114,7 +121,7 @@ const LineChart = ({ data, currentDay }) => {
     svg
       .append('line')
       .attr('x1', xScale(maxHour - 1))
-      .attr('y1', 0)
+      .attr('y1', 20)
       .attr('x2', xScale(maxHour - 1))
       .attr('y2', innerHeight)
       .attr('stroke', '#E0C3FC')
@@ -298,34 +305,37 @@ const LineChart = ({ data, currentDay }) => {
     svg.select('.y-axis .domain').style('stroke', '#003366');
 
     // // Create legends
-    // svg
-    //   .append('text')
-    //   .attr('x', 10)
-    //   .attr('y', 290)
-    //   .text('Temperature (F)')
-    //   .attr('fill', 'steelblue')
-    //   .attr('font-size', '12px');
+    svg
+      .append('text')
+      .attr('x', 10)
+      .attr('y', 10)
+      .text(`Temperature (${units})`)
+      .attr('fill', '#00dbde')
+      .attr('font-size', '11px')
+      .attr('font-weight', '700');
 
-    // svg
-    //   .append('text')
-    //   .attr('x', 40)
-    //   .attr('y', 290)
-    //   .text('Humidity (%)')
-    //   .attr('fill', 'green')
-    //   .attr('font-size', '12px');
-    // svg
-    //   .append('text')
-    //   .attr('x', 25)
-    //   .attr('y', 290)
-    //   .text('Wind Speed (mph)')
-    //   .attr('fill', 'pink')
-    //   .attr('font-size', '12px');
+    svg
+      .append('text')
+      .attr('x', 120)
+      .attr('y', 10)
+      .text('Humidity (%)')
+      .attr('fill', '#0047ab')
+      .attr('font-size', '11px')
+      .attr('font-weight', '700');
+    svg
+      .append('text')
+      .attr('x', 200)
+      .attr('y', 10)
+      .text('Wind Speed (mph)')
+      .attr('fill', '#0093e9')
+      .attr('font-size', '11px')
+      .attr('font-weight', '700');
 
     // Cleanup function to remove event listeners when component unmounts
     return () => {
       listeningArea.on('mousemove', null).on('mouseleave', null);
     };
-  }, [data, time]);
+  }, [data, time, units]);
 
   return (
     <div className='weather-graph'>

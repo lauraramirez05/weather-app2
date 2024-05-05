@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { useWeatherContext } from '../utils/WeatherContext';
 import LocationModal from './LocationModal';
-import LocationModal2 from './LocationModal2';
+
 
 const Location = () => {
   const { place, setPlace, locationModal, setLocationModal } =
@@ -18,7 +18,7 @@ const Location = () => {
       <FontAwesomeIcon icon={faLocationDot} />
       <h2 onClick={handleClick}>{place}</h2>
       {/* <LocationModal2 /> */}
-      {locationModal && <LocationModal2 />}
+      {locationModal && <LocationModal />}
     </div>
   );
 };

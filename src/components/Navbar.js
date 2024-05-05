@@ -1,9 +1,9 @@
-import MenuToggle from "./MenuToggle.js";
+import MenuToggle from './MenuToggle.js';
 const Navbar = () => {
   return (
     <nav>
       <h1>ForecastPrep</h1>
-      <ul className="navbar-links">
+      {/* <ul className="navbar-links">
         <li>
           <a href="help">Help</a>
         </li>
@@ -11,7 +11,7 @@ const Navbar = () => {
           <a href="logOut">Log Out</a>
         </li>
       </ul>
-      <MenuToggle />
+      <MenuToggle /> */}
     </nav>
   );
 };
