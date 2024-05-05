@@ -1,7 +1,9 @@
-import { useWeatherContext } from "../utils/WeatherContext";
+import { useEffect } from 'react';
+import { useWeatherContext } from './WeatherContext';
 
-const MobileDetector = ({ children }) => {
-  const {isMobile, setIsMobile} = useWeatherContext()
+const useMobileDetector = () => {
+  console.log('checking window size');
+  const { setIsMobile } = useWeatherContext();
 
   useEffect(() => {
     const handleResize = () => {
@@ -18,9 +20,7 @@ const MobileDetector = ({ children }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
-
-  return <>{children(isMobile)}</>;
+  }, []); // Add window to the dependency array
 };
 
-export default MobileDetector;
+export default useMobileDetector;

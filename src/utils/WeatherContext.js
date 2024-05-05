@@ -28,6 +28,8 @@ const WeatherProvider = ({ children }) => {
         setFilteredDays,
         units,
         setUnits,
+        isMobile,
+        setIsMobile,
       }}
     >
       {children}

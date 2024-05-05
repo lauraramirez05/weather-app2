@@ -134,6 +134,10 @@ h2 {
   height: auto;
   overflow-y: scroll;
 }
+
+.weather-card {
+  width: 300px;
+}
 .weather-info-container {
   display: flex;
   flex-direction: column;
