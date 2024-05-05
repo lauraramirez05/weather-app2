@@ -1,7 +1,7 @@
 import { useWeatherContext } from '../utils/WeatherContext';
 
 const WeatherUnits = () => {
-  const { units, setUnits } = useWeatherContext();
+  const { units, setUnits, darkMode } = useWeatherContext();
 
   const handleClick = (e) => {
     setUnits(e.target.innerText);
@@ -10,14 +10,18 @@ const WeatherUnits = () => {
   return (
     <div className='units-container'>
       <div
-        className={`units ${units === 'F' ? 'active' : ''}`}
+        className={`units ${units === 'F' ? 'active' : ''} ${
+          darkMode ? 'dark' : ''
+        }`}
         onClick={handleClick}
       >
         F
       </div>
       <div>/</div>
       <div
-        className={`units ${units === 'C' ? 'active' : ''}`}
+        className={`units ${units === 'C' ? 'active' : ''} ${
+          darkMode ? 'dark' : ''
+        }`}
         onClick={handleClick}
       >
         C

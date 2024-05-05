@@ -1,8 +1,17 @@
 {
   "name": "my-weather-app",
+  "jest": {
+    "verbose": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ]
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-react": "^7.24.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
@@ -17,6 +26,7 @@
     "d3": "^7.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-multi-carousel": "^2.8.5",
     "react-scripts": "5.0.1",
     "react-select-async-paginate": "^0.7.4",
     "react-slick": "^0.30.2",
@@ -26,7 +36,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -49,6 +59,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "jest": "^27.5.1"
   }
 }

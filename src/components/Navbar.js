@@ -1,17 +1,17 @@
-import MenuToggle from './MenuToggle.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSnowflake } from '@fortawesome/free-solid-svg-icons';
+import { SwitchMode } from './SwitchMode.js';
+import { useWeatherContext } from '../utils/WeatherContext.js';
 const Navbar = () => {
+  const { darkMode, setDarkMode } = useWeatherContext();
+
   return (
-    <nav>
-      <h1>ForecastPrep</h1>
-      {/* <ul className="navbar-links">
-        <li>
-          <a href="help">Help</a>
-        </li>
-        <li>
-          <a href="logOut">Log Out</a>
-        </li>
-      </ul>
-      <MenuToggle /> */}
+    <nav className={`${darkMode ? 'dark' : ''}`}>
+      <div className='name-app'>
+        <FontAwesomeIcon icon={faSnowflake} />
+        <h1>ForecastPrep</h1>
+      </div>
+      <SwitchMode />
     </nav>
   );
 };

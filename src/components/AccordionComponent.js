@@ -8,9 +8,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import WeatherUnits from './WeatherUnits';
 import Temperature from './Temperature';
+import { useWeatherContext } from '../utils/WeatherContext';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const AccordionComponent = ({ data, index }) => {
-  console.log(data);
+  const { darkMode } = useWeatherContext();
   return (
     <>
       <Accordion
@@ -18,19 +20,25 @@ const AccordionComponent = ({ data, index }) => {
         defaultExpanded={index === 0}
         style={{ overflow: 'auto' }}
       >
-        <AccordionSummary key={index} className='accordion-summary'>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          key={index}
+          className={`accordion-summary ${darkMode ? 'dark' : ''}`}
+        >
           <h1>{data.datetime.slice(0, -4)}</h1>
         </AccordionSummary>
         <AccordionDetails style={{ overflow: 'auto' }}>
-          <div className='weather-container'>
+          <div className={`weather-container ${darkMode ? 'dark' : ''}`}>
             <div className='weather-info-container'>
               <div className='weather-top'>
                 <div className='weather-icon'>
-                  <img src={require(`../imgs/${data.icon}.png`)} />
+                  <img
+                    src={require(`../imgs/${data.icon}.png`)}
+                    alt={`${data.icon} icon that describes the weather`}
+                  />
                 </div>
                 <div className='weather-info'>
                   <span className='temperature'>
-                    {/* {Math.round(data.temp)} */}
                     <Temperature temp={data.temp} />°<WeatherUnits />
                   </span>
                   <span>{data.conditions}</span>

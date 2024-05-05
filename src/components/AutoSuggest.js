@@ -6,20 +6,7 @@ import { AsyncPaginate } from 'react-select-async-paginate';
 import { GEO_API_URL, getApiOptions } from './GeoApi';
 
 const LocationModal2 = () => {
-  const { place, setPlace, setLocationModal } = useWeatherContext();
-  const [inputValue, setInputValue] = useState(null);
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      console.log('pressed enter');
-      e.preventDefault(); // Prevent the default form submission
-      if (inputValue !== null) {
-        setPlace(inputValue);
-        setInputValue('');
-      }
-      setLocationModal(false);
-    }
-  };
+  const { setPlace, setLocationModal } = useWeatherContext();
 
   const handleInputChange = (searchData) => {
     if (!searchData.value || searchData.value.length > 50) {
@@ -33,7 +20,7 @@ const LocationModal2 = () => {
   const loadOptions = async (inputValue) => {
     try {
       const response = await fetch(
-        `${GEO_API_URL}/cities?namePrefix=${inputValue}`,
+        `${GEO_API_URL}/cities?minPopulation=1000000&namePrefix=${inputValue}&limit=10`,
         getApiOptions
       );
       const result = await response.json();
@@ -58,9 +45,7 @@ const LocationModal2 = () => {
           placeholder='Search for city'
           className='location'
           debounceTimeout={600}
-          value={place}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
           loadOptions={loadOptions}
         />
       </div>

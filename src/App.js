@@ -4,19 +4,17 @@ import Location from './components/Location';
 // import TimeChooser from "./components/TimeChooser";
 import TimePicker from './components/TimePicker';
 import Weather from './components/Weather';
-import { WeatherProvider } from './utils/WeatherContext';
+import { useWeatherContext } from './utils/WeatherContext';
 
 const App = () => {
+  const { darkMode } = useWeatherContext();
   return (
-    <WeatherProvider>
-      <div className='App'>
-        <Navbar />
-        <Location />
-        <TimePicker />
-        {/* <TimeChooser /> */}
-        <Weather />
-      </div>
-    </WeatherProvider>
+    <div className={`App ${darkMode ? 'dark' : ''}`}>
+      <Navbar />
+      <Location />
+      <TimePicker />
+      <Weather />
+    </div>
   );
 };
 

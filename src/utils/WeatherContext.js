@@ -12,6 +12,7 @@ const WeatherProvider = ({ children }) => {
   const [filteredDays, setFilteredDays] = useState([]);
   const [units, setUnits] = useState('F');
   const [isMobile, setIsMobile] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   return (
     <WeatherContext.Provider
@@ -30,6 +31,8 @@ const WeatherProvider = ({ children }) => {
         setUnits,
         isMobile,
         setIsMobile,
+        darkMode,
+        setDarkMode,
       }}
     >
       {children}

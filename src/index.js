@@ -1,18 +1,15 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ThemeProvider } from '@mui/material';
-import theme from './styles/theme';
 import App from './App';
-
-
+import { WeatherProvider } from './utils/WeatherContext';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
 root.render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
+    <WeatherProvider>
       <App />
-    </ThemeProvider>
+    </WeatherProvider>
   </StrictMode>
 );

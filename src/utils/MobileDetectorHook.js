@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useWeatherContext } from './WeatherContext';
 
 const useMobileDetector = () => {
-  console.log('checking window size');
   const { setIsMobile } = useWeatherContext();
 
   useEffect(() => {
