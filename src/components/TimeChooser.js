@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Select as BaseSelect } from "@mui/base/Select";
-import { CustomButton, Listbox, Popup, Option } from "../styles/SelectStyles";
-import { useWeatherContext } from "../utils/WeatherContext";
+import * as React from 'react';
+import { Select as BaseSelect } from '@mui/base/Select';
+import { CustomButton, Listbox, Popup, Option } from '../styles/SelectStyles';
+import { useWeatherContext } from '../utils/WeatherContext';
 
 const Select = React.forwardRef(function Select(props, ref) {
   const { onChange, ...other } = props;
@@ -27,22 +27,22 @@ export default function TimeChooser() {
     // setDay(value);
   };
 
-  console.log("day", day);
+  console.log('day', day);
   return (
-    <div className="time-container">
-      <Select defaultValue={"hello"} onChange={handleSelectChange}>
-        <Option value={"0"}>Every Monday</Option>
-        <Option value={"1"}>Every Tuesday</Option>
-        <Option value={"2"}>Every Wednesday</Option>
-        <Option value={"3"}>Every Thursday</Option>
-        <Option value={"4"}>Every Friday</Option>
-        <Option value={"5"}>Every Saturday</Option>
-        <Option value={"6"}>Every Sunday</Option>
+    <div className='time-container'>
+      <Select defaultValue={'hello'} onChange={handleSelectChange}>
+        <Option value='0'>Every Sunday</Option>
+        <Option value='1'>Every Monday</Option>
+        <Option value='2'>Every Tuesday</Option>
+        <Option value='3'>Every Wednesday</Option>
+        <Option value='4'>Every Thursday</Option>
+        <Option value='5'>Every Friday</Option>
+        <Option value='6'>Every Saturday</Option>
       </Select>
-      <Select defaultValue={"Morning"}>
-        <Option value={"Morning"}>Morning</Option>
-        <Option value={"Afternon"}>Afternoon</Option>
-        <Option value={"Evening"}>Evening</Option>
+      <Select defaultValue={'Morning'}>
+        <Option value={'Morning'}>Morning</Option>
+        <Option value={'Afternon'}>Afternoon</Option>
+        <Option value={'Evening'}>Evening</Option>
       </Select>
     </div>
   );

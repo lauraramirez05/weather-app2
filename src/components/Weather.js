@@ -2,6 +2,12 @@ import { useWeatherContext } from '../utils/WeatherContext';
 import { useState, useEffect } from 'react';
 import LineChart from './LineChart';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faWind,
+  faCloudRain,
+  faTemperatureHalf,
+} from '@fortawesome/free-solid-svg-icons';
 
 const Weather = () => {
   const { dayOfWeek, setPlace, place, time, filteredDays, setFilteredDays } =
@@ -88,22 +94,42 @@ const Weather = () => {
   return (
     <>
       {filteredDays.map((day, index) => (
-        <Accordion key={index} defaultExpanded={index === 0}>
-          <AccordionSummary key={index}>
+        <Accordion
+          key={index}
+          defaultExpanded={index === 0}
+          style={{ overflow: 'auto' }}
+        >
+          <AccordionSummary key={index} className='accordion-summary'>
             <h1>{day.datetime.slice(0, -4)}</h1>
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails style={{ overflow: 'auto' }}>
             <div className='weather-container'>
               <div className='weather-info-container'>
-                <div className='weather-icon'>
-                  {/* Display weather icon here */}
-                  <img src={require(`../imgs/${day.icon}.png`)} />
+                <div className='weather-top'>
+                  <div className='weather-icon'>
+                    <img src={require(`../imgs/${day.icon}.png`)} />
+                  </div>
+                  <div className='weather-info'>
+                    <span className='temperature'>{Math.round(day.temp)}°</span>
+                    <span>{day.conditions}</span>
+                  </div>
                 </div>
-                <div className='weather-info'>
-                  <span className='temperature'>{Math.round(day.temp)}°</span>
-                  <span>{day.conditions}</span>
-                  <span>Winds: {day.windspeed}mph</span>
-                  <span>Chance of Rain: </span>
+                <div className='weather-bottom'>
+                  <div className='details'>
+                    <FontAwesomeIcon icon={faWind} />
+                    <span>{Math.round(day.windspeed)}mph</span>
+                    <span>Wind</span>
+                  </div>
+                  <div className='details'>
+                    <FontAwesomeIcon icon={faCloudRain} />
+                    <span>{Math.round(day.precipprob)}%</span>
+                    <span>Rain</span>
+                  </div>
+                  <div className='details'>
+                    <FontAwesomeIcon icon={faTemperatureHalf} />
+                    <span>{Math.round(day.humidity)}%</span>
+                    <span>Humidity</span>
+                  </div>
                 </div>
               </div>
               <LineChart data={day.hours} currentDay={day.datetime} />

@@ -14,19 +14,47 @@ const TimePicker = () => {
 
   return (
     <div className='time-container'>
-      <select name='dayOfEvent' onChange={handleDaySelect}>
-        <option value='0'>Every Sunday</option>
-        <option value='1'>Every Monday</option>
-        <option value='2'>Every Tuesday</option>
-        <option value='3'>Every Wednesday</option>
-        <option value='4'>Every Thursday</option>
-        <option value='5'>Every Friday</option>
-        <option value='6'>Every Saturday</option>
+      <select
+        name='dayOfEvent'
+        onChange={handleDaySelect}
+        className='select-btn'
+      >
+        <option className='list-box' value='0'>
+          Every Sunday
+        </option>
+        <option className='list-box' value='1'>
+          Every Monday
+        </option>
+        <option className='list-box' value='2'>
+          Every Tuesday
+        </option>
+        <option className='list-box' value='3'>
+          Every Wednesday
+        </option>
+        <option className='list-box' value='4'>
+          Every Thursday
+        </option>
+        <option className='list-box' value='5'>
+          Every Friday
+        </option>
+        <option className='list-box' value='6'>
+          Every Saturday
+        </option>
       </select>
-      <select name='timeOfEvent' onChange={handleTimeSelect}>
-        <option value='morning'>Morning</option>
-        <option value='afternoon'>Afternoon</option>
-        <option value='evening'>Evening</option>
+      <select
+        name='timeOfEvent'
+        onChange={handleTimeSelect}
+        className='select-btn'
+      >
+        <option className='list-box' value='morning'>
+          Morning
+        </option>
+        <option className='list-box' value='afternoon'>
+          Afternoon
+        </option>
+        <option className='list-box' value='evening'>
+          Evening
+        </option>
       </select>
     </div>
   );
