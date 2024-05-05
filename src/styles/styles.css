@@ -6,7 +6,8 @@
   text-align: center;
   padding: 5px;
   border-radius: 20px;
-  border: 1px solid black;
+  border: 2px solid #99ccf3;
+  overflow-y: scroll;
   -webkit-box-shadow: 0px -2px 41px -9px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px -2px 41px -9px rgba(0, 0, 0, 0.75);
   box-shadow: 0px -2px 41px -9px rgba(0, 0, 0, 0.75);
@@ -86,7 +87,7 @@ h2 {
   align-self: center;
   justify-content: space-around;
   padding-bottom: 10px;
-  border-bottom: 1px solid black;
+  border-bottom: 2px solid #99ccf3;
 }
 
 .select-btn {
@@ -103,7 +104,7 @@ h2 {
   text-align: left;
   line-height: 1.5;
   background-color: '#fff';
-  border: 1px solid '#DAE2ED';
+  border: 2px solid #99ccf3;
   color: '#1C2025';
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -126,21 +127,19 @@ h2 {
   outline: 0px;
 }
 
-.dropdown-arrows {
-  margin-left: 15px;
-  color: darkgray;
-}
-
 .accordion-summary {
   margin: 0;
 }
-
+.weather-container {
+  height: auto;
+  overflow-y: scroll;
+}
 .weather-info-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 90%;
-  border: 1px solid #c7d0dd;
+  border: 2px solid #99ccf3;
   padding: 10px;
   margin: 0 auto;
   border-radius: 20px;
@@ -148,17 +147,37 @@ h2 {
   margin-bottom: 20px;
 }
 
+.units-container {
+  display: flex;
+}
+
+.units {
+  color: #dae2ed;
+}
+
+.active {
+  color: black;
+}
 .weather-top {
   display: flex;
   justify-content: space-between;
   padding: 0 8px 15px 8px;
   margin-bottom: 10px;
-  border-bottom: 1px solid #c7d0dd;
+  border-bottom: 2px solid #99ccf3;
 }
 
 .weather-bottom {
   display: flex;
   justify-content: space-around;
+}
+
+.weather-graph {
+  width: 90%;
+  border: 1px solid #c7d0dd;
+  padding: 10px;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .details {
@@ -175,10 +194,29 @@ h2 {
 
 .temperature {
   font-size: 2rem;
+  display: flex;
+  gap: 5px;
 }
-.weather-graph {
-  position: relative;
+
+.legend {
+  display: flex;
+  justify-content: space-around;
+  font-size: 11px;
+  font-weight: 700;
 }
+
+.temp {
+  color: #00dbde;
+}
+
+.humidity {
+  color: #0047ab;
+}
+
+.windspeed {
+  color: #0093e9;
+}
+
 .tooltip {
   position: fixed;
   top: 40%;

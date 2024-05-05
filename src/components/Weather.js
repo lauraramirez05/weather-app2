@@ -8,10 +8,19 @@ import {
   faCloudRain,
   faTemperatureHalf,
 } from '@fortawesome/free-solid-svg-icons';
+import WeatherUnits from './WeatherUnits';
+import Temperature from './Temperature';
 
 const Weather = () => {
-  const { dayOfWeek, setPlace, place, time, filteredDays, setFilteredDays } =
-    useWeatherContext();
+  const {
+    dayOfWeek,
+    setPlace,
+    place,
+    time,
+    filteredDays,
+    setFilteredDays,
+    units,
+  } = useWeatherContext();
   const [data, setData] = useState(null);
   console.log(place);
 
@@ -110,7 +119,10 @@ const Weather = () => {
                     <img src={require(`../imgs/${day.icon}.png`)} />
                   </div>
                   <div className='weather-info'>
-                    <span className='temperature'>{Math.round(day.temp)}°</span>
+                    <span className='temperature'>
+                      {/* {Math.round(day.temp)} */}
+                      <Temperature temp={day.temp} />°<WeatherUnits />
+                    </span>
                     <span>{day.conditions}</span>
                   </div>
                 </div>

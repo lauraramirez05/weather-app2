@@ -10,6 +10,7 @@ const WeatherProvider = ({ children }) => {
   const [place, setPlace] = useState('New York City, US');
   const [locationModal, setLocationModal] = useState(false);
   const [filteredDays, setFilteredDays] = useState([]);
+  const [units, setUnits] = useState('F');
 
   return (
     <WeatherContext.Provider
@@ -24,6 +25,8 @@ const WeatherProvider = ({ children }) => {
         setLocationModal,
         filteredDays,
         setFilteredDays,
+        units,
+        setUnits,
       }}
     >
       {children}

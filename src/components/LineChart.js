@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useWeatherContext } from '../utils/WeatherContext';
+import Temperature from './Temperature';
 
 const LineChart = ({ data, currentDay }) => {
   const { time } = useWeatherContext();
@@ -31,10 +32,10 @@ const LineChart = ({ data, currentDay }) => {
 
     //Set up svg
     const width = 350;
-    const height = 300;
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+    const height = 260;
+    const margin = { top: 20, right: 20, left: 40 };
     const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    const innerHeight = height - margin.top;
 
     //Calculate the y-axis
     const [minTemp, maxTemp] = d3.extent(temperatureData, (d) =>
@@ -106,7 +107,7 @@ const LineChart = ({ data, currentDay }) => {
       .attr('y1', 0)
       .attr('x2', xScale(minHour + 1))
       .attr('y2', innerHeight)
-      .attr('stroke', 'red')
+      .attr('stroke', '#E0C3FC')
       .attr('stroke-width', 2)
       .attr('stroke-dasharray', '5,5');
 
@@ -116,7 +117,7 @@ const LineChart = ({ data, currentDay }) => {
       .attr('y1', 0)
       .attr('x2', xScale(maxHour - 1))
       .attr('y2', innerHeight)
-      .attr('stroke', 'red')
+      .attr('stroke', '#E0C3FC')
       .attr('stroke-width', 2)
       .attr('stroke-dasharray', '5,5');
 
@@ -184,11 +185,12 @@ const LineChart = ({ data, currentDay }) => {
     // Append lines to SVG
 
     //===== TEMPERATURE LINE ======//
+
     d3.select(svgRef.current)
       .append('path')
       .datum(temperatureData)
       .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
+      .attr('stroke', '#00DBDE')
       .attr('stroke-width', 2)
       .attr('d', tempLine);
 
@@ -206,8 +208,8 @@ const LineChart = ({ data, currentDay }) => {
       .attr('class', 'temp-circle') // Add class for styling
       .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
       .attr('cy', (d) => yScale(d.temp)) // Set y position based on temperature
-      .attr('r', 3) // Set radius of the circle
-      .attr('fill', 'steelblue'); // Set color of the circle
+      .attr('r', 2) // Set radius of the circle
+      .attr('fill', '#00dbde'); // Set color of the circle
 
     // svg
     //   .selectAll('.temp-label') // Select all text elements with class 'temp-label'
@@ -226,7 +228,7 @@ const LineChart = ({ data, currentDay }) => {
       .append('path')
       .datum(humidityData)
       .attr('fill', 'none')
-      .attr('stroke', 'green')
+      .attr('stroke', '#0047AB')
       .attr('stroke-width', 2)
       .attr('d', humidityLine);
 
@@ -238,15 +240,15 @@ const LineChart = ({ data, currentDay }) => {
       .attr('class', 'humidity-circle') // Add class for styling
       .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
       .attr('cy', (d) => yScale(d.humidity)) // Set y position based on temperature
-      .attr('r', 3) // Set radius of the circle
-      .attr('fill', 'green'); // Set color of the circle
+      .attr('r', 2) // Set radius of the circle
+      .attr('fill', '#0047AB'); // Set color of the circle
 
     //===== WINDSPEED LINE ======//
     d3.select(svgRef.current)
       .append('path')
       .datum(windSpeedData)
       .attr('fill', 'none')
-      .attr('stroke', 'pink')
+      .attr('stroke', '#0093E9')
       .attr('stroke-width', 2)
       .attr('d', windSpeedLine);
 
@@ -258,8 +260,8 @@ const LineChart = ({ data, currentDay }) => {
       .attr('class', 'windspeed-circle') // Add class for styling
       .attr('cx', (d) => xScale(d.datetime.getHours())) // Set x position based on hour
       .attr('cy', (d) => yScale(d.windData)) // Set y position based on temperature
-      .attr('r', 3) // Set radius of the circle
-      .attr('fill', 'pink'); // Set color of the circle
+      .attr('r', 2) // Set radius of the circle
+      .attr('fill', '#0093E9'); // Set color of the circle
     // svg
     //   .selectAll('.humidity-label') // Select all text elements with class 'temp-label'
     //   .data(humidityData) // Bind data
@@ -276,38 +278,48 @@ const LineChart = ({ data, currentDay }) => {
     svg
       .append('g')
       .attr('transform', `translate(0, ${innerHeight})`) // Move the x-axis to the bottom
-      .call(xAxis); // Call the axis generator to render the x-axis
+      .call(xAxis) // Call the axis generator to render the x-axis
+      .selectAll('text')
+      .style('fill', '#003366');
 
     //Append yAxis
     svg
       .append('g')
       .attr('class', 'y-axis')
       .attr('transform', `translate(${margin.left},0)`)
-      .call(yAxis);
+      .call(yAxis)
+      .selectAll('text')
+      .style('fill', '#003366');
 
-    // Create legends
-    svg
-      .append('text')
-      .attr('x', 265)
-      .attr('y', 10)
-      .text('Temperature (F)')
-      .attr('fill', 'steelblue')
-      .attr('font-size', '12px');
+    // Style x-axis line
+    svg.select('.x-axis .domain').style('stroke', '#003366');
 
-    svg
-      .append('text')
-      .attr('x', 265)
-      .attr('y', 25)
-      .text('Humidity (%)')
-      .attr('fill', 'green')
-      .attr('font-size', '12px');
-    svg
-      .append('text')
-      .attr('x', 265)
-      .attr('y', 40)
-      .text('Wind Speed (mph)')
-      .attr('fill', 'pink')
-      .attr('font-size', '12px');
+    // Style y-axis line
+    svg.select('.y-axis .domain').style('stroke', '#003366');
+
+    // // Create legends
+    // svg
+    //   .append('text')
+    //   .attr('x', 10)
+    //   .attr('y', 290)
+    //   .text('Temperature (F)')
+    //   .attr('fill', 'steelblue')
+    //   .attr('font-size', '12px');
+
+    // svg
+    //   .append('text')
+    //   .attr('x', 40)
+    //   .attr('y', 290)
+    //   .text('Humidity (%)')
+    //   .attr('fill', 'green')
+    //   .attr('font-size', '12px');
+    // svg
+    //   .append('text')
+    //   .attr('x', 25)
+    //   .attr('y', 290)
+    //   .text('Wind Speed (mph)')
+    //   .attr('fill', 'pink')
+    //   .attr('font-size', '12px');
 
     // Cleanup function to remove event listeners when component unmounts
     return () => {
@@ -318,6 +330,11 @@ const LineChart = ({ data, currentDay }) => {
   return (
     <div className='weather-graph'>
       <svg ref={svgRef}></svg>
+      <div className='legend'>
+        <span className='temp'>Temperature</span>
+        <span className='humidity'>Humidity</span>
+        <span className='windspeed'>Wind Speed</span>
+      </div>
     </div>
   );
 };
